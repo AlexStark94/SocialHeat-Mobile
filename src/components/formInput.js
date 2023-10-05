@@ -1,26 +1,41 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
+// import { TextInput } from 'react-native-paper';
 
-export default function FormInput({ labelName, ...rest }) {
+export default function FormInput({ labelName, placeholder = "", icon = null, ...rest }) {
   return (
-    <TextInput
-      label={labelName}
-      style={styles.input}
-      numberOfLines={1}
-      {...rest}
-    />
+    <SafeAreaView style={{ width: '100%' }}>
+      <View style={styles.container}>
+        {icon}
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          {...rest}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  input: {
-    marginTop: 10,
-    marginBottom: 10,
-    height: 48,
-    backgroundColor: 'white',
-    borderRadius: 8,
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#EDEDED',
     borderWidth: 1,
-    borderColor: '#DBDBDB'
+    borderRadius: 50,
+    paddingHorizontal: 16,
+    marginBottom: 8
+  },
+  input: {
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    color: '#424242',
+    marginLeft: 16
   }
 });

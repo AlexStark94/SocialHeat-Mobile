@@ -1,10 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { Title } from 'react-native-paper';
 
 import FormButton from '../components/formButton.js';
 import FormInput from '../components/formInput.js';
 import { AuthContext } from '../context/authProvider.js';
+
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { IMAGENAME } from '../../assets/socialheat-logo-transparent.png';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -19,34 +23,77 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Title style={styles.titleText}>Welcome!</Title>
-      <FormInput
-        labelName='Email'
-        value={email}
-        autoCapitalize='none'
-        onChangeText={(userEmail) => setEmail(userEmail)}
-      />
-      <FormInput
-        labelName='Password'
-        value={password}
-        secureTextEntry={true}
-        onChangeText={(userPassword) => setPassword(userPassword)}
-      />
-      <FormButton
-        title='Login'
-        modeValue='contained'
-        labelStyle={styles.loginButtonLabel}
-        onPress={() => {
-          handleLogin()
+      <Image
+        style={{
+          height: 150,
+          width: 150
         }}
+        source={require('../../assets/socialheat-logo-transparent.png')}
       />
-      <FormButton
-        title='Sign up here'
-        modeValue='text'
-        uppercase={false}
-        labelStyle={styles.navButtonText}
-        onPress={() => navigation.navigate('Signup')}
-      />
+      <Title style={styles.titleText}>SocialHeat</Title>
+
+      <View style={styles.buttonsContainer}>
+        <FormInput
+          labelName='Email'
+          value={email}
+          placeholder='Your email'
+          icon={
+            <MaterialCommunityIcons
+              name={'account-outline'}
+              color={'#26262688'}
+              size={16}
+            />
+          }
+          autoCapitalize='none'
+          onChangeText={(userEmail) => setEmail(userEmail)}
+        />
+        <FormInput
+          labelName='Password'
+          value={password}
+          secureTextEntry={true}
+          placeholder='Your password'
+          icon={
+            <MaterialCommunityIcons
+              name={'lock-outline'}
+              color={'#26262688'}
+              size={16}
+            />
+          }
+          onChangeText={(userPassword) => setPassword(userPassword)}
+        />
+        <FormButton
+          title='Login'
+          modeValue='contained'
+          labelStyle={styles.loginButtonLabel}
+          onPress={() => {
+            handleLogin()
+          }}
+        />
+        <View
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            marginTop: 46
+          }}
+          onPress={() => navigation.navigate('Signup')}
+        >
+          <Text
+            style={styles.donHaveAccountText}
+          >
+            Don’t have an account?
+          </Text>
+          <Text
+            style={styles.registerText}
+          >
+            Register
+          </Text>
+        </View>
+
+      </View>
+
     </View>
   );
 }
@@ -56,16 +103,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    flexDirection: 'col'
   },
   titleText: {
-    fontSize: 24,
-    marginBottom: 10
+    fontSize: 52,
+    fontWeight: 'bold',
+    paddingTop: 24,
+    marginBottom: 64
   },
   loginButtonLabel: {
-    fontSize: 22
+    fontWeight: 'bold'
   },
-  navButtonText: {
-    fontSize: 16
+  donHaveAccountText: {
+    fontSize: 12,
+    color: 'white'
+  },
+  registerText: {
+    fontSize: 12,
+    color: '#FF7A00',
+    fontWeight: 'bold',
+    marginLeft: 4
+  },
+  buttonsContainer: {
+    paddingVertical: 40,
+    paddingHorizontal: 32,
+    width: '100%',
+    backgroundColor: '#00000033',
+    borderRadius: 15
   }
 });
