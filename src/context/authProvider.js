@@ -24,8 +24,6 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  console.log(user)
-
   return (
     <AuthContext.Provider
       value={{
@@ -47,6 +45,7 @@ export const AuthProvider = ({ children }) => {
 
             // Signed-in Firebase user
             const currentUser = userCredential.user;
+            setUser(currentUser);
 
             console.log("Firebase user created: ", currentUser);
           } catch (error) {
@@ -56,7 +55,7 @@ export const AuthProvider = ({ children }) => {
           }
         },
         logout: async () => {
-          // TODO
+          setUser(null)
         }
       }}
     >

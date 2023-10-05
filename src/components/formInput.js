@@ -1,8 +1,6 @@
 import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
-
-const { width, height } = Dimensions.get('screen');
 
 export default function FormInput({ labelName, ...rest }) {
   return (
@@ -19,7 +17,10 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 10,
     marginBottom: 10,
-    width: width / 1.5,
-    height: height / 15
+    height: 48,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DBDBDB'
   }
 });

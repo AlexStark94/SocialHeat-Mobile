@@ -2,11 +2,8 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Title } from 'react-native-paper';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-
 import FormButton from '../components/formButton.js';
 import FormInput from '../components/formInput.js';
-import { auth } from '../firebase/index.js';
 import { AuthContext } from '../context/authProvider.js';
 
 export default function LoginScreen({ navigation }) {
