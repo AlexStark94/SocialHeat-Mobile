@@ -1,12 +1,23 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Title } from 'react-native-paper';
 
-const HomeScreen = () => {
+import FormButton from '../components/formButton';
+
+export default function HomeScreen() {
   return (
-    <View>
-      <Text>Home Screen</Text>
+    <View style={styles.container}>
+      <Title>SocialHeat</Title>
+      <FormButton modeValue='contained' title='Logout' />
     </View>
   );
-};
+}
 
-export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f5f5f5',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
