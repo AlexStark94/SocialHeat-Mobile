@@ -31,6 +31,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow SocialHeat to access your camera."
+        }
+      ]
+    ]
   }
 }
