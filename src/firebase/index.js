@@ -5,7 +5,7 @@ import {
   getReactNativePersistence
 } from 'firebase/auth';
 
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD6RM_31XugdutoQ-TARUY8AHJNEKQu4dM",
@@ -28,4 +28,22 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
 });
 
-export { auth, db };
+const getUserDocument = async (userId) => {
+  const userRef = doc(db, 'users', userId);
+  
+  try {
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      // El documento existe, puedes acceder a sus datos con userDoc.data()
+      return userDoc.data();
+    } else {
+      console.log('El documento no existe');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al obtener el documento:', error);
+    return null;
+  }
+};
+
+export { auth, db, getUserDocument };

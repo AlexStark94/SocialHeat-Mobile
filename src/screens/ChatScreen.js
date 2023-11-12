@@ -60,7 +60,7 @@ export default function ChatScreen() {
     return () => unsubscribe;
   }, [])
 
-  
+
   useEffect(() => {
     if (scrollViewRef?.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
@@ -91,17 +91,23 @@ export default function ChatScreen() {
           autoCapitalize='none'
           onChangeText={(userMessage) => setMessage(userMessage)}
         />
-        <FormButton
-          onPress={() => sendMessage()}
-          modeValue='contained'
-          title='Send message'
-        />
+        <View 
+          style={{
+            marginBottom: 32
+          }}
+        >
+          <FormButton
+            onPress={() => sendMessage()}
+            modeValue='contained'
+            title='Send message'
+          />
 
-        <FormButton
-          onPress={() => handleLogout()}
-          modeValue='contained'
-          title='Logout'
-        />
+          <FormButton
+            onPress={() => handleLogout()}
+            modeValue='contained'
+            title='Logout'
+          />
+        </View>
       </ScrollView>
     </GestureHandlerRootView>
   );

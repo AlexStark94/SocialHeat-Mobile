@@ -8,8 +8,6 @@ import { AuthContext } from '../context/authProvider.js';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { IMAGENAME } from '../../assets/socialheat-logo-transparent.png';
-
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
