@@ -9,6 +9,18 @@ import { View, Image } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
 
+const customMapStyle = [
+  {
+    featureType: 'poi',
+    elementType: 'labels',
+    stylers: [
+      {
+        visibility: 'off', // "off" hará que los POI sean invisibles
+      },
+    ],
+  },
+];
+
 const CustomMarker = ({ coordinate, imageUri, navigation, point }) => (
   <Marker
     onPress={() => {
@@ -94,6 +106,7 @@ export default function HomeScreen({ navigation }) {
           location?.coords &&
           <MapView
             provider={PROVIDER_GOOGLE}
+            customMapStyle={customMapStyle}
             style={styles.map}
             initialRegion={{
               latitude: location.coords.latitude,
@@ -151,7 +164,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#FFFFFF',
-    marginTop: 16,
+    marginTop: 0,
     flexGrow: 1,
   },
   map: {
