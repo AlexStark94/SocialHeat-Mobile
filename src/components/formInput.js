@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingTop: 10,
+    paddingTop: 8,
     paddingRight: 10,
-    paddingBottom: 10,
+    paddingBottom: 8,
     paddingLeft: 0,
     color: '#424242',
     marginLeft: 16

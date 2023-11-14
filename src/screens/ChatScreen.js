@@ -10,7 +10,7 @@ import { db } from '../firebase';
 import FormInput from '../components/formInput';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
-export default function ChatScreen() {
+export default function ChatScreen({ route }) {
   const { logout, user } = useContext(AuthContext);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
@@ -22,10 +22,10 @@ export default function ChatScreen() {
 
   const sendMessage = async () => {
     try {
-      const docRef = await addDoc(collection(db, "messages"), {
+      const docRef = await addDoc(collection(db, 'clients', route?.params?.id, 'chatMessages'), {
         message: message,
         from: user.displayName,
-        date: new Date()
+        timestamp: new Date()
       });
       console.log("Document written with ID: ", docRef.id);
       setMessage('')
@@ -42,8 +42,8 @@ export default function ChatScreen() {
 
   useEffect(() => {
     const q = query(
-      collection(db, "messages"),
-      orderBy("date", "asc"),
+      collection(db, 'clients', route?.params?.id, 'chatMessages'),
+      orderBy("timestamp", "asc"),
       limit(50)
     );
 
@@ -53,7 +53,7 @@ export default function ChatScreen() {
         fetchedMessages.push({ ...doc.data(), id: doc.id });
       });
       const sortedMessages = fetchedMessages.sort(
-        (a, b) => a.date - b.date
+        (a, b) => a.timestamp - b.timestamp
       );
       setMessages(sortedMessages);
     });
@@ -68,7 +68,7 @@ export default function ChatScreen() {
   }, [setMessages, messages])
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <ScrollView ref={scrollViewRef} style={[styles.chatbox, { height: chatContainerHeight }]}>
           <View style={{ paddingBottom: 24 }}>
@@ -101,12 +101,6 @@ export default function ChatScreen() {
             modeValue='contained'
             title='Send message'
           />
-
-          <FormButton
-            onPress={() => handleLogout()}
-            modeValue='contained'
-            title='Logout'
-          />
         </View>
       </ScrollView>
     </GestureHandlerRootView>
@@ -116,8 +110,8 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
+    paddingVertical: 32,
     paddingHorizontal: 16,
-    marginTop: 16,
     flexGrow: 1,
   },
   containerEnd: {
@@ -125,13 +119,14 @@ const styles = StyleSheet.create({
   },
   containerStart: {
     alignSelf: 'flex-start',
+    alignItems: 'flex-start'
   },
   chatbox: {
     backgroundColor: '#FAFAFA',
     display: 'flex',
     overflow: 'scroll',
     padding: 16,
-    marginVertical: 32,
+    marginVertical: 16,
     borderColor: '#EBEBEB',
     borderWidth: 1,
     borderRadius: 8,
@@ -141,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EF5C2E',
     borderRadius: 4,
     marginVertical: 4,
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-start',
   },
   textOutMessageBox: {
     color: 'white',

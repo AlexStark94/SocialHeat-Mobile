@@ -25,7 +25,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "googleMapsApiKey": "AIzaSyA1Bym__8QKgrUnUul4-2ZydGaTaU-smJs"
+      "googleMapsApiKey": "AIzaSyA1Bym__8QKgrUnUul4-2ZydGaTaU-smJs",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.socialheat.socialheatmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +42,11 @@
           "cameraPermission": "Allow SocialHeat to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6a4150a7-7883-4ed0-a59e-19fad8838d0e"
+      }
+    }
   }
 }

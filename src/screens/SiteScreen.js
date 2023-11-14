@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 import ActivityOption from '../components/SiteOptions/activityOption';
 
-const SiteScreen = ({ route }) => {
+const SiteScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState(null);
   const [option, setOption] = useState('activity');
 
@@ -30,8 +30,6 @@ const SiteScreen = ({ route }) => {
 
     return () => unsubscribePosts;
   }, []);
-
-  console.log(posts)
 
   return (
     <View style={styles.container}>
@@ -82,7 +80,7 @@ const SiteScreen = ({ route }) => {
             Menu
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => setOption('chat')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Search', {...route?.params})}>
           <MaterialCommunityIcons
             name={"message-text"}
             color={option === 'chat' ? '#FF774B' : '#878787'}
