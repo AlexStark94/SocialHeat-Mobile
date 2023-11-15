@@ -2,13 +2,11 @@ import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const { width, height } = Dimensions.get('screen');
-
-export default function FormButton({ title, modeValue, ...rest }) {
+export default function FormButton({ title, modeValue, style = "", ...rest }) {
   return (
     <Button
       mode={modeValue}
-      style={styles.button}
+      style={{...styles.button, ...style}}
       {...rest}
     >
       {title}

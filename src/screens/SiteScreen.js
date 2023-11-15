@@ -29,7 +29,9 @@ const SiteScreen = ({ route, navigation }) => {
     });
 
     return () => unsubscribePosts;
-  }, []);
+  }, [route?.params?.id]);
+
+  console.log(route?.params?.id)
 
   return (
     <View style={styles.container}>

@@ -2,13 +2,13 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, TextInput, View } from 'react-native';
 // import { TextInput } from 'react-native-paper';
 
-export default function FormInput({ labelName, placeholder = "", icon = null, ...rest }) {
+export default function FormInput({ labelName, placeholder = "", icon = null, style = "", ...rest }) {
   return (
     <SafeAreaView style={{ width: '100%' }}>
-      <View style={styles.container}>
+      <View style={{...styles.container, ...style}}>
         {icon}
         <TextInput
-          style={styles.input}
+          style={{...styles.input}}
           placeholder={placeholder}
           {...rest}
         />

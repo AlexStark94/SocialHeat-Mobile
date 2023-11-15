@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, TouchableOpacity, ImageBackground } from "react-native";
+import { Text, View, TouchableOpacity, ImageBackground, Dimensions, Image } from "react-native";
 import { Camera } from "expo-camera";
-import { db, app } from "../firebase";
+import { db, app, getUserDocument } from "../firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection } from "firebase/firestore";
 import { AuthContext } from "../context/authProvider";
 import * as Location from 'expo-location';
+import FormInput from "../components/formInput";
+import FormButton from "../components/formButton";
 
 export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,6 +16,22 @@ export default function CameraScreen() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const { user } = useContext(AuthContext);
+
+  const screenWidth = Dimensions.get('window').width;
+  const [userData, setUserData] = useState('');
+  const [storageRef, setStorageRef] = useState(null);
+  const [blobRef, setBlobRef] = useState(null)
+  const [description, setDescription] = useState('');
+  const [savedCoords, setSavedCoords] = useState(null)
+
+  useEffect(() => {
+    const fetchUserDocument = async () => {
+      const userDocument = await getUserDocument(user.email);
+      setUserData(userDocument);
+    };
+
+    fetchUserDocument();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -41,7 +59,7 @@ export default function CameraScreen() {
     setCapturedImage(photo);
     try {
       const { coords } = await Location.getCurrentPositionAsync({});
-  
+
       // Upload image and save into another doc in firestore
       uploadImageAsync(photo.uri, coords);
     } catch (error) {
@@ -54,15 +72,21 @@ export default function CameraScreen() {
     const blob = await response.blob();
 
     // Creates a unique reference for the image into firebase storage
-    const storageRef = ref(getStorage(), `images/${new Date().toISOString()}`);
+    const storageRefUnique = ref(getStorage(), `images/${new Date().toISOString()}`);
 
+    setSavedCoords(coords)
+    setStorageRef(storageRefUnique);
+    setBlobRef(blob)
+  }
+
+  const uploadToFirebase = async () => {
     try {
       // Puload image to Firebase storage
-      await uploadBytes(storageRef, blob);
+      await uploadBytes(storageRef, blobRef);
 
       // Get download image url
       const downloadURL = await getDownloadURL(storageRef);
-      publishImage(downloadURL, coords);
+      publishImage(downloadURL, savedCoords);
 
       console.log("Upload succesfully. Download url:", downloadURL);
     } catch (error) {
@@ -72,14 +96,17 @@ export default function CameraScreen() {
 
   const publishImage = async (url, coords) => {
     try {
-      const docRef = await addDoc(collection(db, "images"), {
-        src: url,
-        from: user.displayName,
-        createdAt: new Date(),
+      const docRef = await addDoc(collection(db, "clients", "Catalina_1700005261133", "posts"), {
+        img: url,
+        user: user.displayName,
+        timestamp: new Date(),
         location: {
           lat: coords.latitude,
           lng: coords.longitude
         },
+        likes: 10,
+        dislikes: 3,
+        description
       });
 
       console.log("Document written with ID: ", docRef.id);
@@ -95,48 +122,82 @@ export default function CameraScreen() {
       }}
     >
       {previewVisible ? (
-        <ImageBackground
-          source={{ uri: capturedImage && capturedImage.uri }}
-          style={{
-            flex: 1,
-          }}
-        >
-          <View
+        <View style={{
+          backgroundColor: '#FFF',
+          padding: 16,
+          paddingTop: 60,
+          flex: 1,
+        }}>
+          <ImageBackground
+            source={{ uri: capturedImage && capturedImage.uri }}
             style={{
-              flex: 1,
-              flexDirection: "column",
-              padding: 15,
-              justifyContent: "flex-end",
+              width: '100%',
+              height: 200,
             }}
           >
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flex: 1,
+                flexDirection: "column",
+                padding: 15,
+                justifyContent: "flex-end",
               }}
             >
-              <TouchableOpacity
-                onPress={() => setPreviewVisible(false)}
+              <View
                 style={{
-                  width: 130,
-                  height: 40,
-
-                  alignItems: "center",
-                  borderRadius: 4,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: 'end'
                 }}
               >
-                <Text
+                <TouchableOpacity
+                  onPress={() => setPreviewVisible(false)}
                   style={{
-                    color: "#fff",
-                    fontSize: 20,
+                    width: '100%',
+                    height: 20,
+                    alignItems: "center",
+                    borderRadius: 4,
                   }}
                 >
-                  Re-take
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 14,
+                    }}
+                  >
+                    Re-take
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          </ImageBackground>
+
+          <View style={styles.contentContainer}>
+            <Image
+              style={styles.image}
+              source={{ uri: userData?.profileImg }}
+            />
+            <FormInput
+              value={description}
+              placeholder='Add some description...'
+              autoCapitalize='none'
+              onChangeText={(e) => setDescription(e)}
+              style={{
+                width: screenWidth - 88,
+                marginLeft: 8
+              }}
+            />
           </View>
-        </ImageBackground>
+
+          <FormButton
+            onPress={() => uploadToFirebase()}
+            modeValue='contained'
+            title={"UPLOAD"}
+          />
+
+          {/* uploadToFirebase */}
+
+        </View>
       ) : (
         <Camera
           style={{ flex: 1 }}
@@ -206,4 +267,20 @@ export default function CameraScreen() {
       )}
     </View>
   );
+}
+
+const styles = {
+  contentContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    marginHorizontal: 20
+  },
+  image: {
+    height: 48,
+    width: 48,
+    borderRadius: 24,
+  },
 }
